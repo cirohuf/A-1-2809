@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>A-1 2809 | CEO TERMINAL FINAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000;
+            --white: #ffffff;
+            --grey: #1a1a1a;
+            --text-dim: #666666;
+            --green: #00ff00;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; cursor: crosshair; }
+
+        body { 
+            background: var(--bg); 
+            color: var(--white); 
+            padding: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            overflow-x: hidden;
+        }
+
+        /* --- LOGO & HEADER --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0 30px 0;
+            border-bottom: 1px solid var(--grey);
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            border: 2px solid var(--white);
+            padding: 5px 10px;
+            font-weight: 900;
+            font-size: 1.2rem;
+            letter-spacing: 0;
+        }
+
+        .logo-text { font-size: 0.7rem; color: var(--text-dim); line-height: 1; }
+
+        /* --- NAVEGACIÓN --- */
+        nav {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .nav-item {
+            text-align: center;
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .nav-item.active { color: var(--white); border-bottom: 2px solid var(--white); padding-bottom: 5px; }
+        .nav-item b { display: block; font-size: 0.8rem; margin-bottom: 4px; }
+
+        /* --- MÉTRICAS --- */
+        .revenue-container {
+            border: 1px solid var(--white);
+            padding: 40px 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            margin-bottom: 30px;
+        }
+
+        .rev-block { border-right: 1px solid var(--grey); padding: 0 15px; }
+        .rev-block:last-child { border: none; }
+        .rev-label { font-size: 0.55rem; color: var(--text-dim); margin-bottom: 10px; }
+        .rev-value { font-size: 2rem; font-weight: 900; letter-spacing: -1px; }
+
+        /* --- SECCIONES --- */
+        .section { display: none; }
+        .section.active { display: block; }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .box { border: 1px solid var(--grey); padding: 25px; min-height: 400px; position: relative; }
+        .box-title { font-size: 0.55rem; color: var(--text-dim); margin-bottom: 30px; letter-spacing: 3px; }
+
+        /* INTERFAZ */
+        .tier { border: 1px solid var(--grey); padding: 20px; margin-bottom: 15px; cursor: pointer; }
+        .tier.selected { border-color: var(--white); background: #0a0a0a; }
+        .tier h3 { font-size: 0.85rem; font-weight: 700; }
+
+        .input-line {
+            border: none; border-bottom: 1px solid var(--grey);
+            background: transparent; color: var(--white);
+            width: 100%; padding: 15px 0; margin-bottom: 40px;
+            font-size: 0.9rem; outline: none; text-transform: uppercase;
+        }
+
+        .pay-btn {
+            border: 1px solid var(--grey); background: transparent; color: var(--white);
+            padding: 15px; font-size: 0.55rem; cursor: pointer; width: 32%;
+        }
+        .pay-btn.active { background: var(--white); color: var(--bg); }
+
+        .confirm-btn {
+            width: 100%; background: var(--white); color: var(--bg);
+            border: none; padding: 25px; font-weight: 900;
+            font-size: 0.9rem; margin-top: 10px; cursor: pointer;
+        }
+
+        .export-btn {
+            background: transparent; color: var(--white); border: 1px solid var(--white);
+            padding: 10px 20px; font-size: 0.6rem; cursor: pointer; margin-top: 20px;
+        }
+
+        .console-box {
+            background: #020202; height: 300px; padding: 15px;
+            font-family: monospace; font-size: 0.65rem; color: var(--green);
+            overflow-y: scroll; border: 1px solid var(--grey);
+        }
+
+        .log-entry {
+            display: flex; justify-content: space-between;
+            font-size: 0.6rem; padding: 15px 0;
+            border-bottom: 1px solid var(--grey); color: var(--text-dim);
+        }
+        .log-entry.new { color: var(--white); }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-box">
+            <div class="logo-icon">A-1</div>
+            <div class="logo-text">PROJECT<br><b>2809</b></div>
+        </div>
+        <span id="clock" style="font-size: 0.7rem; color: var(--text-dim);">00:00:00</span>
+    </header>
+
+    <nav>
+        <div class="nav-item active" onclick="switchSection('management', this)">01.<b>MANAGEMENT</b></div>
+        <div class="nav-item" onclick="switchSection('brand', this)">02.<b>BRAND ASSETS</b></div>
+        <div class="nav-item" onclick="switchSection('database', this)">03.<b>ELITE DB</b></div>
+        <div class="nav-item" onclick="switchSection('security', this)">04.<b>KERNEL</b></div>
+    </nav>
+
+    <div class="revenue-container">
+        <div class="rev-block">
+            <div class="rev-label">TOTAL REVENUE</div>
+            <div class="rev-value" id="rev-total">0.00€</div>
+        </div>
+        <div class="rev-block">
+            <div class="rev-label">NET PROFIT (40%)</div>
+            <div class="rev-value" id="net-profit">0.00€</div>
+        </div>
+        <div class="rev-block">
+            <div class="rev-label">A-1 STOCK</div>
+            <div class="rev-value" id="stock-val">100</div>
+        </div>
+    </div>
+
+    <div id="management" class="section active">
+        <div class="main-grid">
+            <div class="box">
+                <div class="box-title">PRICE TIER</div>
+                <div class="tier selected" onclick="updatePrice(130, this)">
+                    <h3>RESERVE TIER</h3>
+                    <span style="font-size: 0.6rem; color: var(--text-dim);">UNIT: 130.00€</span>
+                </div>
+                <div class="tier" onclick="updatePrice(80, this)">
+                    <h3>FOUNDER TIER</h3>
+                    <span style="font-size: 0.6rem; color: var(--text-dim);">UNIT: 80.00€ (COMMERCIAL)</span>
+                </div>
+            </div>
+            <div class="box">
+                <div class="box-title">EXECUTION</div>
+                <input type="text" id="client-id" class="input-line" placeholder="IDENTIFIER">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+                    <button class="pay-btn" onclick="updateMethod('CRYPTO', this)">CRYPTO</button>
+                    <button class="pay-btn" onclick="updateMethod('BANK', this)">BANK</button>
+                    <button class="pay-btn active" onclick="updateMethod('CASH', this)">CASH</button>
+                </div>
+                <button class="confirm-btn" onclick="executeTrx()">CONFIRM TRX</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="brand" class="section">
+        <div class="main-grid">
+            <div class="box">
+                <div class="box-title">PRODUCT DESIGN</div>
+                <p style="font-size: 0.65rem; line-height: 2.2; color: var(--text-dim);">
+                    [+] BOTTLE: PREMIUM BLACK GLASS / MATTE FINISH.<br>
+                    [+] BOX: 2809 ELITE EDITION / MAGNETIC.<br>
+                    [+] LOGO: MINIMALIST A-1 (CENTERED).<br>
+                    [+] VALUE: HIGH-END SUPPLEMENTATION.
+                </p>
+            </div>
+            <div class="box">
+                <div class="box-title">CORPORATE IDENTITY</div>
+                <p style="font-size: 0.65rem; line-height: 2.2; color: var(--text-dim);">
+                    [+] OFFICE: MINIMALIST INTERFACE.<br>
+                    [+] CLIENTS: HIGH-NET-WORTH INDIVIDUALS.<br>
+                    [+] STATUS: OPERATIONAL.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div id="database" class="section">
+        <div class="box">
+            <div class="box-title">ELITE DATABASE (FIRST 50)</div>
+            <div id="db-list">
+                <div class="log-entry" style="color:var(--white); border-bottom: 2px solid var(--white);">
+                    <span>#ID // CONTACT // METHOD</span>
+                    <span>AMOUNT</span>
+                </div>
+            </div>
+            <button class="export-btn" onclick="exportData()">EXPORT DATABASE (.TXT)</button>
+        </div>
+    </div>
+
+    <div id="security" class="section">
+        <div class="box">
+            <div class="box-title">SYSTEM KERNEL</div>
+            <div id="kernel-out" class="console-box">
+                [SYS] KERNEL A-1 2809 LOADED...<br>
+                [SYS] LOGO ASSETS SECURED...<br>
+                [SYS] READY...<br>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let state = { totalRev: 0, stock: 100, price: 130, method: 'CASH', count: 0, history: [] };
+
+        setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
+
+        function switchSection(id, el) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            el.classList.add('active');
+        }
+
+        function updatePrice(p, el) {
+            state.price = p;
+            document.querySelectorAll('.tier').forEach(t => t.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        function updateMethod(m, el) {
+            state.method = m;
+            document.querySelectorAll('.pay-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function addKernelLog(msg) {
+            const out = document.getElementById('kernel-out');
+            out.innerHTML += `[${new Date().toLocaleTimeString()}] ${msg}<br>`;
+            out.scrollTop = out.scrollHeight;
+        }
+
+        function executeTrx() {
+            const name = document.getElementById('client-id').value.toUpperCase();
+            if(!name) return;
+
+            state.totalRev += state.price;
+            state.stock--;
+            state.count++;
+            
+            let trxData = `#${state.count} | ${name} | ${state.method} | ${state.price}€`;
+            state.history.push(trxData);
+
+            document.getElementById('rev-total').innerText = state.totalRev.toFixed(2) + "€";
+            document.getElementById('net-profit').innerText = (state.totalRev * 0.4).toFixed(2) + "€";
+            document.getElementById('stock-val').innerText = state.stock;
+
+            const db = document.getElementById('db-list');
+            db.innerHTML += `<div class="log-entry new"><span>#${state.count.toString().padStart(3, '0')} // ${name} // ${state.method}</span><span>${state.price.toFixed(2)}€</span></div>`;
+
+            addKernelLog(`TRX_SUCCESS: ${name} (+${state.price}€)`);
+            document.getElementById('client-id').value = "";
+        }
+
+        function exportData() {
+            let content = `REPORT A-1 2809\nDATE: ${new Date().toLocaleDateString()}\nTOTAL REVENUE: ${state.totalRev}€\nPROFIT (40%): ${state.totalRev * 0.4}€\n\nTRANSACTIONS:\n` + state.history.join('\n');
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `A1_2809_Report.txt`;
+            a.click();
+            addKernelLog("DATABASE EXPORTED SUCCESSFULLY.");
+        }
+    </script>
+</body>
+</html>
